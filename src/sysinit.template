@@ -1,0 +1,28 @@
+#!/bin/sh
+echo "sysinit: start"
+/bin/busybox --install -s /bin
+echo "sysinit: busybox installed"
+export PATH=/bin:/usr/bin:/usr/sbin
+echo "sysinit: path set"
+
+DISK="__DISK__"
+if [ -n "$DISK" ]; then
+    echo "sysinit: mounting $DISK"
+    n=0
+    while [ "$n" -lt 10 ]; do
+        if mount "$DISK" /home; then
+            echo "sysinit: mount ok"
+            break
+        fi
+        n=$((n + 1))
+        echo "sysinit: mount retry $n"
+        sleep 1
+    done
+    if [ "$n" -eq 10 ]; then
+        echo "sysinit: could not mount $DISK, continuing without /home"
+    fi
+fi
+
+echo "sysinit: execing /bin/sh"
+exec /bin/sh
+echo "sysinit: exec failed"
