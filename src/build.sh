@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-# /build is internal to the container to avoid Mac filesystem limitations (case-sensitivity, mknod)
+# /build is internal to the container because Mac filesystem limitations (case-sensitivity, mknod) break everything
 SRC_INITRAMFS=/build/initramfs
 INITRAMFS_CPIO=/kernel/initramfs.cpio
 KERNEL_SRC=/kernel/linux-6.18.22
@@ -111,7 +111,7 @@ make ARCH=x86_64 x86_64_defconfig
 make ARCH=x86_64 olddefconfig
 
 echo "Compiling binaries..."
-# musl-gcc inherits Alpine's default PIE toolchain, so link init explicitly as ET_EXEC.
+# musl-gcc uses Alpine's default PIE toolchain; must link init explicitly as ET_EXEC
 CRTBEGIN=$(gcc -print-file-name=crtbegin.o)
 CRTEND=$(gcc -print-file-name=crtend.o)
 

@@ -136,7 +136,7 @@ cp /build/sysroot/usr/lib/crtn.o  /build/initramfs/usr/lib/tcc/
 echo "Adding the evil dot that broke everything..."
 cp -r /build/sysroot/usr/include/. /build/initramfs/usr/include/
 
-# Leave behind a forwarding wrapper so old instructions can't silently use a stale copied build script.
+# forwarding wrapper so old instructions don't silently use a stale copied build script
 cat > /build/build.sh <<'EOF'
 #!/bin/sh
 echo "NOTICE: /build/build.sh is only a wrapper. Running /clave/src/build.sh instead."
